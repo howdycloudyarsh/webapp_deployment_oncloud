@@ -2,6 +2,9 @@
 
 ![1  diagram](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/0140591e-ea6d-4736-b884-13930f0f9798)
 
+=========================================================================================
+> **Agenda** : ci/cd pipeline to deploy webapp on Tomcat using Cloud.
+
 > **Pre-Requisites**
 
 a. Simple Java webapp project.
@@ -15,6 +18,8 @@ d. Jenkins Server (Linux).
 e. Tomcat Server (Linux).
 
 f. Maven & Git Installation/Configuration.
+
+========================================================================================
 
 > Create one ec2 instance as Jenkins Server with Ubuntu.
 
@@ -212,7 +217,147 @@ f. Maven & Git Installation/Configuration.
 
 ![51  edit the tomcat-user  xml file](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/67a8bf59-0f4e-4f78-afb5-c84cb97124ef)
 
-> Paste 
+> Paste the credentials script and save it.
+
+> role rolename="manager-gui"
+
+> role rolename="manager-script"
+
+> role rolename="manager-jmx"
+
+> role rolename="manager-status"
+
+> user username="admin" password="admin" roles="manager-gui, manager-script, manager-jmx, manager-status"
+
+> user username="deployer" password="deployer" roles="manager-gui, manager-script"/>	<user username="tomcat" password="123456" roles="manager-gui"
+
+![52  paste the credentials script and save it](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/5e5f5489-a20b-4704-907f-4a759aec4f66)
+
+> After saving the file, restart the tomact service again.
+
+![53  after saving the file again restart the tomcat service](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/ab10cc74-00a4-453d-900d-62fba0a9f77f)
+
+> We wil use the credentials which we entered in the tomcat-users file to login in to the manager app.
+
+![54  we will use the user credentials that we enter in to the file to login](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/d4ff5a7c-208e-4e66-be3f-8bedc1093e4b)
+
+> Now we have to install plugins to integrate docker into jenkins.
+
+![55  to integrate tomcat with jenkins we have to install a plugin called deploy to container](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/edb8a9c9-44a8-4aed-8249-cd4d5725e148)
+
+> After the plugins get installed restart the jenkins.
+
+![56  after the plugins get installed restart jenkins](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/c6ec3ca7-21eb-46fd-be20-e692308a0169)
+
+> Go to manage Jenkins --> Credentials --> then add credentials.
+
+![57  we have to go to manage Jenkins then credentials then add the credentials](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/e86fc8c6-2245-4a91-bdb6-4e54f9d8051b)
+
+> Here we add the ther username and password which we have added in the users file.
+
+![58  We will provide the other username we added as deployer with its password](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/3305abae-7045-4ed3-b45b-6107a15f9be7)
+
+> Goto the JOb and configure it.
+
+![59  now we have to go to the JOb and configure irt](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/5eb08500-b7b3-4734-91ca-b6d31137e849)
+
+> Go to post build action and select deploy war/ear to container.
+
+![60  go to post build actions and select deploy war ear to a container](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/3ff9fd60-25f6-4813-819b-11572974307e)
+
+> Type as shown in the pic.
+
+![61  put as shown in the pic](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/91c97c0d-c177-4ea7-97db-259f8776cd54)
+
+> Now in the Container option select "tomcat version" and then choose the credentials we added with the url.
+
+![62  now in the container option select tomcat version and then choose the credentials we added with the url](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/a4f04257-b18a-4cd6-a158-c158644e8caa)
+
+> Exit the "bin" directory then go to "webapps" directory and check the files present inside.
+
+![63  come out of bin directory then go to webapps directory and check the files present inside](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/31b91013-bccf-46e5-80a3-c0493977147f)
+
+> Build the job again and let it finish then again check the webapps directory in tomcat.
+
+![64  build the job again and let it fisnhthen again check the webapps directory in tomcat](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/83ab4d4d-1c11-4c7e-8952-c3d5dee0e388)
+
+> A webapp.war file will be generated in tomcat webapp directory.
+
+![65  a webapp war file will be generated in tomcat webapp directory](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/e9b6f2ba-0e10-478f-8dff-1c75af7f2fb9)
+
+> This s the java code written in the "index.jsp" file.
+
+![66  this s the java code written in the index jsp file](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/aee96018-45a3-4b83-9120-8e909724904a)
+
+> Now check with the tomcat url with webapp you will find the code displayed.
+
+![67  now check with the tomcat url with webapp you will find the code](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/a1964686-add0-4075-ace4-8fbac223cab1)
+
+> Go to the job and confiure its "build trigger" with "poll scm" to check every 2 mniutes.
+
+![68  go to job and confiure its build trigger with poll scm to check every 2 mniutes](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/4e697e2e-ab0f-42c5-ae3f-c6a3491ae803)
+
+> Now go to github and edit the code and commit the changes to check our job.
+
+![69  now go to github and edit the code and commit the changes to check our job](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/0a4858e3-ac7c-44be-8564-0d39ce0427a6)
+
+> After 2 minutes jenkins will automatically build the job.
+
+![70  after 2 minutes jenkins will automatically build the job](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/4abf0173-48a6-4f5e-b666-931a784afe96)
+
+> Now we will refresh the webpage and see the changes.
+
+![71  now we will refresh the webpage and see the changes](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/ca28689b-7b02-438a-b8af-820e1cafaa63)
+
+> We will make changes locally by cloning the repo to local machine and edit the "index.jsp" and push it to repo.
+
+![72  now clone the repo to your local machine and edit the index jsp and psh it to repo](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/f8fc4ac4-bb78-4520-b8aa-5582db8c39aa)
+
+> After editing lets add and commit.
+
+![73  after editing add and commit to central repo](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/7997238f-dfcd-4a19-ba2a-3b97f63b0e4a)
+
+> Then push it to central repo.
+
+![74  now push it to central repo](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/b3b9985e-4250-4d83-9542-02a7b0ad7a7f)
+
+> After pushing the code Jenkins starts to build job automatically.
+
+![75  after pushing the code jenkins started to build job automatically](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/248cada0-36df-45d4-866f-7842db903160)
+
+> Ci/cd project built successfully.
+
+![76  Cicd project built successfully](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/c479a67a-8a81-42d7-913a-4eeb89c38dcd)
+
+> We will check in the browser with tomcat and check the result.
+
+![77  we will check in the browser with tomcat and check the result](https://github.com/howdycloudyarsh/webapp_deployment_oncloud/assets/133496386/a80a3fea-893a-48bb-9ae0-7a73c45c49b4)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
